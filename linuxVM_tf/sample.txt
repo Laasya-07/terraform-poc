@@ -1,0 +1,20 @@
+resource "null_resource" "example" {
+
+  connection {
+    type     = "ssh"
+    user     = var.admin_username
+    password = var.admin_password
+    host     = azurerm_public_ip.pip.ip_address
+    port     = 22
+  }
+  provisioner "file" {
+    source      = "./httpd2.sh"
+    destination = "/tmp/httpd.sh"
+  }
+  provisioner "local-exec" {
+    inline = [
+      "chmod +x /tmp/httpd.sh",
+      "sh /tmp/httpd.sh"
+    ]
+  }
+}
